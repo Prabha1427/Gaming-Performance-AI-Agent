@@ -56,33 +56,34 @@ boosts = st.number_input("Boosts Used", min_value=0)
 favorite_weapon = st.number_input("Favorite Weapon", min_value=0)
 if st.button("Analyze"):
 
-    data = pd.DataFrame({
-        "Player_ID":[player_id],
-        "Map":[map_id],
-        "Tier":[tier],
-        "Kills":[kills],
-        "Damage_Dealt":[damage],
-        "Survival_Time_Minutes":[survival],
-        "Headshot_Percentage":[headshot],
-        "Assists":[assists],
-        "Revives":[revives],
-        "Distance_Travelled_km":[distance],
-        "Longest_Kill_meters":[longest_kill],
-        "Heals_Used":[heals],
-        "Boosts_Used":[boosts],
-        "Favorite_Weapon":[favorite_weapon]
-    })
+    try:
 
-    data_scaled = scaler.transform(data)
-    
-    prediction = model.predict(data_scaled)
+        data = pd.DataFrame({
+            "Player_ID":[player_id],
+            "Map":[map_id],
+            "Tier":[tier],
+            "Kills":[kills],
+            "Damage_Dealt":[damage],
+            "Survival_Time_Minutes":[survival],
+            "Headshot_Percentage":[headshot],
+            "Assists":[assists],
+            "Revives":[revives],
+            "Distance_Travelled_km":[distance],
+            "Longest_Kill_meters":[longest_kill],
+            "Heals_Used":[heals],
+            "Boosts_Used":[boosts],
+            "Favorite_Weapon":[favorite_weapon]
+        })
 
-    if prediction[0] == 1:
-        result_text = "High Chance of Winning"
-    else:
-        result_text = "Low Chance of Winning"
+        data_scaled = scaler.transform(data)
+        prediction = model.predict(data_scaled)
 
-    prompt = f"""
+        if prediction[0] == 1:
+            result_text = "High Chance of Winning"
+        else:
+            result_text = "Low Chance of Winning"
+
+        prompt = f"""
 You are a gaming performance AI coach.
 
 Player Stats:
@@ -100,12 +101,16 @@ Give:
 - Strengths
 - Weaknesses
 - Improvement tips
-Keep it short and simple.
+Keep it short.
 """
 
-    response = gemini_model.generate_content(prompt)
+        response = gemini_model.generate_content(prompt)
+        ai_analysis = response.text
 
-    ai_analysis = response.text
+        st.success("Analysis Completed 🎯")
+        st.write("### AI Report")
+        st.write(ai_analysis)
 
-    st.write("### AI Analysis")
-    st.write(ai_analysis)
+    except Exception as e:
+        st.error("Something went wrong ❌")
+        st.write(e)
