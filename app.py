@@ -81,7 +81,7 @@ if st.button("Analyze"):
     else:
         result_text = "Low Chance of Winning"
     prompt = f"""
-You are an expert gaming coach.
+You are a gaming performance AI coach.
 
 Player Stats:
 Kills: {kills}
@@ -90,19 +90,18 @@ Survival Time: {survival}
 Headshot Percentage: {headshot}
 Assists: {assists}
 Revives: {revives}
-Distance: {distance}
 
 Prediction: {result_text}
 
-Give:
-1. Summary
-2. Strengths
-3. Weaknesses
-4. Improvement Tips
-Keep it short.
+Give short feedback:
+- Summary
+- Strengths
+- Weakness
+- Improvement tips
 """
 
 response = gemini_model.generate_content(prompt)
 
 ai_analysis = response.text
+
 st.write(ai_analysis)
