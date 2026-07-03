@@ -75,14 +75,13 @@ if st.button("Analyze"):
 
     data_scaled = scaler.transform(data)
 
-    prediction = model.predict(data_scaled)
+   prediction = model.predict(data_scaled)
 
 if prediction[0] == 1:
     result_text = "High Chance of Winning"
 else:
     result_text = "Low Chance of Winning"
 
-# 👇 THIS MUST COME BEFORE generate_content
 prompt = f"""
 You are a gaming performance AI coach.
 
@@ -97,11 +96,11 @@ Revives: {revives}
 Prediction: {result_text}
 
 Give:
-1. Summary
-2. Strengths
-3. Weaknesses
-4. Improvement tips
-Keep it short.
+- Summary
+- Strengths
+- Weaknesses
+- Improvement tips
+Keep it short and simple.
 """
 
 response = gemini_model.generate_content(prompt)
