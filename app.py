@@ -74,15 +74,13 @@ if st.button("Analyze"):
     })
 
     data_scaled = scaler.transform(data)
-
-   prediction = model.predict(data_scaled)
-
-if prediction[0] == 1:
-    result_text = "High Chance of Winning"
-else:
-    result_text = "Low Chance of Winning"
-
-prompt = f"""
+    
+    prediction = model.predict(data_scaled)
+    if prediction[0] == 1:
+        result_text = "High Chance of Winning"
+    else:
+        result_text = "Low Chance of Winning"
+    prompt = f"""
 You are a gaming performance AI coach.
 
 Player Stats:
