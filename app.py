@@ -104,7 +104,7 @@ Give:
 Keep it short.
 """
 
-        with st.spinner("Generating AI report... please wait 🎮"):
+with st.spinner("Generating AI report... please wait 🎮"):
 
     response = gemini_model.generate_content(prompt)
     ai_analysis = response.text
