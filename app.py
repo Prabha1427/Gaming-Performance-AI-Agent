@@ -5,6 +5,11 @@ import streamlit as st
 import pandas as pd
 import joblib
 
+@st.cache_data
+def get_prediction(_model, _scaler, data):
+    data_scaled = _scaler.transform(data)
+    return _model.predict(data_scaled)
+
 load_dotenv()
 
 genai.configure(
@@ -56,6 +61,8 @@ boosts = st.number_input("Boosts Used", min_value=0)
 favorite_weapon = st.number_input("Favorite Weapon", min_value=0)
 if st.button("Analyze"):
 
+    st.info("Analyzing player performance... ⚡")
+
     try:
 
         data = pd.DataFrame({
@@ -75,43 +82,45 @@ if st.button("Analyze"):
             "Favorite_Weapon":[favorite_weapon]
         })
 
-        data_scaled = scaler.transform(data)
-        prediction = model.predict(data_scaled)
+        # ⚡ FAST ML PREDICTION (cached)
+        prediction = get_prediction(model, scaler, data)
 
         if prediction[0] == 1:
             result_text = "High Chance of Winning"
         else:
             result_text = "Low Chance of Winning"
 
-        prompt = f"""
+        st.success("ML Prediction Done ⚡")
+
+        # ⚡ SHOW QUICK RESULT FIRST (IMPORTANT UX TRICK)
+        st.write("### Quick Result")
+        st.write(result_text)
+
+        # ⚡ Gemini in background feel
+        with st.spinner("Generating AI coaching tips... 🤖"):
+
+            prompt = f"""
 You are a gaming performance AI coach.
 
-Player Stats:
 Kills: {kills}
 Damage: {damage}
-Survival Time: {survival}
-Headshot Percentage: {headshot}
+Survival: {survival}
+Headshot: {headshot}
 Assists: {assists}
 Revives: {revives}
 
 Prediction: {result_text}
 
-Give:
-- Summary
-- Strengths
-- Weaknesses
-- Improvement tips
-Keep it short.
+Give short improvement tips only.
 """
 
-        with st.spinner("Generating AI report... please wait 🎮"):
-
             response = gemini_model.generate_content(prompt)
-            ai_analysis = response.text
 
-        st.success("Done ✅")
+        ai_analysis = response.text
+
+        st.write("### AI Coaching Tips")
         st.write(ai_analysis)
 
     except Exception as e:
-        st.error("Something went wrong ❌")
+        st.error("Error occurred ❌")
         st.write(e)
