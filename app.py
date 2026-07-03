@@ -76,45 +76,33 @@ if st.button("Analyze"):
     data_scaled = scaler.transform(data)
 
     prediction = model.predict(data_scaled)
+    if prediction[0] == 1:
+        result_text = "High Chance of Winning"
+    else:
+        result_text = "Low Chance of Winning"
     prompt = f"""
 You are an expert gaming coach.
 
-Player Statistics:
-
+Player Stats:
 Kills: {kills}
-Damage Dealt: {damage}
+Damage: {damage}
 Survival Time: {survival}
 Headshot Percentage: {headshot}
 Assists: {assists}
 Revives: {revives}
-Distance Travelled: {distance}
-Longest Kill: {longest_kill}
-Heals Used: {heals}
-Boosts Used: {boosts}
+Distance: {distance}
 
-Prediction:
-{"High Chance of Winning" if prediction[0] == 1 else "Low Chance of Winning"}
+Prediction: {result_text}
 
-Provide:
-
-1. Performance Summary
+Give:
+1. Summary
 2. Strengths
 3. Weaknesses
-4. Improvement Suggestions
-
-Keep the response short and professional.
+4. Improvement Tips
+Keep it short.
 """
 
 response = gemini_model.generate_content(prompt)
 
 ai_analysis = response.text
-
-if prediction[0] == 1:
-
-    st.success("🏆 High Chance of Winning")
-    st.write(ai_analysis)
-
-else:
-
-    st.error("❌ Low Chance of Winning")
-    st.write(ai_analysis)
+st.write(ai_analysis)
