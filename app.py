@@ -118,9 +118,11 @@ Give short improvement tips only.
 
         ai_analysis = response.text
 
-        st.write("### AI Coaching Tips")
+        st.write("Sending request to Gemini...")
+        response = gemini_model.generate_content(prompt)
+        st.write("Response received from Gemini")
+        ai_analysis = response.text
         st.write(ai_analysis)
-
     except Exception as e:
         st.error("Error occurred ❌")
         st.write(e)
