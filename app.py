@@ -76,10 +76,12 @@ if st.button("Analyze"):
     data_scaled = scaler.transform(data)
     
     prediction = model.predict(data_scaled)
+
     if prediction[0] == 1:
         result_text = "High Chance of Winning"
     else:
         result_text = "Low Chance of Winning"
+
     prompt = f"""
 You are a gaming performance AI coach.
 
@@ -101,8 +103,9 @@ Give:
 Keep it short and simple.
 """
 
-response = gemini_model.generate_content(prompt)
+    response = gemini_model.generate_content(prompt)
 
-ai_analysis = response.text
+    ai_analysis = response.text
 
-st.write(ai_analysis)
+    st.write("### AI Analysis")
+    st.write(ai_analysis)
