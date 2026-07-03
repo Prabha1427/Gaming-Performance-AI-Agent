@@ -104,12 +104,13 @@ Give:
 Keep it short.
 """
 
-        response = gemini_model.generate_content(prompt)
-        ai_analysis = response.text
+        with st.spinner("Generating AI report... please wait 🎮"):
 
-        st.success("Analysis Completed 🎯")
-        st.write("### AI Report")
-        st.write(ai_analysis)
+    response = gemini_model.generate_content(prompt)
+    ai_analysis = response.text
+
+st.success("Done ✅")
+st.write(ai_analysis)
 
     except Exception as e:
         st.error("Something went wrong ❌")
